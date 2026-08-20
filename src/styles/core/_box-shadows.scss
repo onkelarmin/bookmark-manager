@@ -1,0 +1,30 @@
+// bs-none is used for transitions
+$box-shadow-colors: (
+  none: (
+    light: "transparent",
+    dark: "transparent",
+  ),
+  container: (
+    light: "neutral-900--light" 0.06,
+    dark: "neutral-900--dark" 0.06,
+  ),
+  input: (
+    light: "neutral-900--light" 0.12,
+    dark: "neutral-900--dark" 0.12,
+  ),
+);
+
+$box-shadows-offsets: (
+  none: 0px 0px 0px 0px,
+  container: 0px 2px 4px 0px,
+  input: 0px 0px 0px 1px,
+);
+
+$box-shadows: (
+  container: (
+    var(--box-shadow-container),
+  ),
+  input: (
+    var(--box-shadow-input),
+  ),
+);

@@ -1,0 +1,33 @@
+@use "helper" as *;
+@use "page" as *;
+
+$base-spacing: (
+  2xs: rem(4px),
+  xs: rem(8px),
+  sm: rem(12px),
+  md: rem(16px),
+  lg: fluid(20px, 24px),
+  xl: fluid(24px, 32px),
+  2xl: fluid(32px, 40px),
+  3xl: fluid(40px, 56px),
+  4xl: fluid(56px, 72px),
+  5xl: fluid(72px, 96px),
+);
+
+$base-layout: (
+  sm: fluid(16px, 24px),
+  md: fluid(24px, 40px),
+  lg: fluid(32px, 56px),
+  xl: fluid(48px, 80px),
+);
+
+$wrapper-padding: (
+  start: bp(24px, 48px, 48px),
+  end: bp(24px, 48px, 48px),
+);
+
+$component-spacing: (
+  card: (
+    padding: rem(16px),
+  ),
+);

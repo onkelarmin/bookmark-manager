@@ -1,0 +1,12 @@
+@use "helper" as *;
+
+// Border-radius
+$border-radius: (
+  2xs: rem(4px),
+  xs: rem(6px),
+  sm: rem(8px),
+  ms: rem(10px),
+  lg: rem(12px),
+  xl: rem(16px),
+  default-focus: rem(2px),
+);

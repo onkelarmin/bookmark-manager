@@ -1,0 +1,45 @@
+body {
+  min-height: 100svh;
+  font: var(--font-4-medium);
+  letter-spacing: var(--ls-4-medium);
+  color: var(--fg-text-base);
+  background-color: var(--bg-canvas-default);
+  text-wrap: pretty;
+}
+
+:where(
+  a[href],
+  button,
+  input,
+  select,
+  option,
+  textarea,
+  summary,
+  [tabindex]:not([tabindex="-1"]),
+  [contenteditable="true"]
+) {
+  border-radius: var(--br-default-focus);
+  outline: var(--border-none);
+  outline-offset: calc(var(--bo-default-focus) * -1);
+  transition:
+    outline-color var(--trans-fast-in),
+    outline-offset var(--trans-fast-out-sensitive);
+
+  &:focus {
+    outline: var(--border-none);
+  }
+  &:focus-visible {
+    outline: var(--border-default-focus);
+    outline-offset: var(--bo-default-focus);
+  }
+}
+
+::selection {
+  background-color: var(--bg-text-selection);
+  color: var(--fg-text-selection);
+}
+
+::target-text {
+  background-color: var(--bg-text-target);
+  color: var(--fg-text-target);
+}

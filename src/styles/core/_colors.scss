@@ -1,0 +1,93 @@
+// Primitives
+$color-core-neutral: (
+  "900--light": hsl(170 62% 5%),
+  "800--light": hsl(165 10% 33%),
+  "500--light": hsl(165 6% 56%),
+  "400--light": hsl(165 13% 78%),
+  "300--light": hsl(165 21% 89%),
+  "100--light": hsl(168 21% 93%),
+  "000--light": hsl(0 0% 100%),
+  "900--dark": hsl(180 100% 4%),
+  "800--dark": hsl(180 100% 6%),
+  "600--dark": hsl(179 100% 9%),
+  "500--dark": hsl(179 100% 13%),
+  "400--dark": hsl(178 100% 14%),
+  "300--dark": hsl(178 100% 22%),
+  "100--dark": hsl(180 5% 71%),
+  "000--dark": hsl(0 0% 100%),
+);
+
+$color-core-accent: (
+  "red": (
+    "800": hsl(2 96% 41%),
+    "600": hsl(2 98% 62%),
+  ),
+);
+
+$color-core-brand: (
+  "primary": (
+    "800": hsl(178 97% 12%),
+    "700": hsl(178 97% 14%),
+  ),
+);
+
+$color-core-gradient: (
+  // 1: (
+  //   start: hsl(192 100% 67%),
+  //   end: hsl(280 87% 65%),
+   // ),
+);
+
+// Has Themes
+$has-themes: true;
+
+// Default-brand
+$default-brand: "primary";
+
+// Background-colors
+$background-colors: (
+  canvas: (
+    default: (
+      light: "neutral-100--light",
+      dark: "neutral-900--dark",
+    ),
+  ),
+  container: (
+    default: (
+      light: "neutral-000--light",
+      dark: "neutral-800--dark",
+    ),
+  ),
+  text: (
+    selection: (
+      light: "primary-700",
+      dark: "primary-700",
+    ),
+    target: (
+      light: "primary-700",
+      dark: "primary-700",
+    ),
+  ),
+);
+
+// Foreground-colors
+$foreground-colors: (
+  text: (
+    base: (
+      light: "neutral-800--light",
+      dark: "neutral-100--dark",
+    ),
+    strong: (
+      light: "neutral-900--light",
+      dark: "neutral-000--dark",
+    ),
+    selection: (
+      light: "neutral-000--light",
+      dark: "neutral-000--dark",
+    ),
+    target: (
+      light: "neutral-000--light",
+      dark: "neutral-000--dark",
+    ),
+  ),
+);

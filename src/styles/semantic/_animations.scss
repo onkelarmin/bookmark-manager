@@ -1,0 +1,70 @@
+@use "../core" as *;
+@use "sass:map";
+
+:root {
+  // Durations
+  @each $speed, $value in $animation-durations {
+    --motion-#{$speed}: #{$value};
+    --motion-#{$speed}-sensitive: #{$value};
+  }
+
+  // Prefers-reduced-motion
+  @media (prefers-reduced-motion: reduce) {
+    @each $speed, $value in $animation-durations {
+      --motion-#{$speed}-sensitive: 0ms;
+    }
+  }
+
+  // Delays
+  @each $speed, $value in $animation-delays {
+    --delay-#{$speed}: #{$value};
+    --delay-#{$speed}-sensitive: #{$value};
+  }
+
+  // Prefers-reduced-motion
+  @media (prefers-reduced-motion: reduce) {
+    @each $speed, $value in $animation-durations {
+      --delay-#{$speed}-sensitive: 0ms;
+    }
+  }
+
+  // Easing
+  @each $ease, $value in $animation-easings {
+    --ease-#{$ease}: #{$value};
+  }
+
+  // Transitions
+  @each $speed, $speed-value in $animation-durations {
+    @each $ease, $ease-value in $animation-easings {
+      --trans-#{$speed}-#{$ease}: var(--motion-#{$speed}) var(--ease-#{$ease});
+      --trans-#{$speed}-#{$ease}-sensitive: var(--motion-#{$speed}-sensitive)
+        var(--ease-#{$ease});
+    }
+  }
+}
+
+// View transitions
+@media (prefers-reduced-motion: no-preference) {
+  html:active-view-transition-type(theme) {
+    &::view-transition-old(root) {
+      animation: fade-out var(--motion-default) var(--ease-in);
+    }
+
+    &::view-transition-new(root) {
+      animation: fade-in var(--motion-default) var(--ease-out);
+    }
+  }
+}
+
+@keyframes fade-out {
+  to {
+    opacity: 0;
+    filter: blur(4px);
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    filter: blur(4px);
+  }
+}

@@ -1,3 +1,5 @@
+import "@/styles/main.scss";
+import { baseFont } from "@/styles/fonts";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -18,7 +20,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en">
+    <html lang="en" className={baseFont.variable}>
       <body>{children}</body>
     </html>
   );

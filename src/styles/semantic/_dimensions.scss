@@ -1,0 +1,73 @@
+@use "../core" as *;
+@use "sass:list";
+@use "sass:map";
+
+:root {
+  // static sizes
+  @each $size, $value in $static-sizes {
+    --size-#{$size}: #{rem($value)};
+  }
+
+  // Breakpoint-specific sizes
+  @function get-breakpoint-specific-name($list) {
+    @return #{list.nth($list, 1)}-#{list.nth($list, 2)}-#{list.nth($list, 3)};
+  }
+  @each $size-list in $breakpoint-specific-sizes {
+    $name: get-breakpoint-specific-name($size-list);
+    --size-#{$name}: #{rem(list.nth($size-list, 1))};
+  }
+  @each $size-list in $breakpoint-specific-sizes {
+    $name: get-breakpoint-specific-name($size-list);
+    @media (width > #{em(map.get($breakpoints, "medium"))}) {
+      --size-#{$name}: #{rem(list.nth($size-list, 2))};
+    }
+  }
+  @each $size-list in $breakpoint-specific-sizes {
+    $name: get-breakpoint-specific-name($size-list);
+    @media (width > #{em(map.get($breakpoints, "large"))}) {
+      --size-#{$name}: #{rem(list.nth($size-list, 3))};
+    }
+  }
+
+  // Breakpoints
+  @each $size, $value in $breakpoints {
+    --bp-#{$size}: #{em($value)};
+  }
+
+  // Wrapper max-widths
+  @each $size, $value in $wrapper-sizes {
+    --size-wrapper-#{$size}: #{rem($value)};
+  }
+
+  // Icon
+  @each $size, $value in $icon-sizes {
+    --size-icon-#{$size}: #{$value};
+  }
+
+  // Miscellaneous
+  @each $size, $value in $miscellaneous-sizes {
+    --size-misc-#{$size}: #{$value};
+  }
+
+  // Wrapper padding
+  @each $direction, $value in $wrapper-padding {
+    --pad-wrapper-#{$direction}: #{$value};
+  }
+
+  // Base Spacing
+  @each $size, $value in $base-spacing {
+    --space-#{$size}: #{$value};
+  }
+
+  // Base Layout
+  @each $size, $value in $base-layout {
+    --layout-#{$size}: #{$value};
+  }
+
+  // Component spacing
+  @each $component, $space-map in $component-spacing {
+    @each $property, $value in $space-map {
+      --#{$component}-#{$property}: #{$value};
+    }
+  }
+}
