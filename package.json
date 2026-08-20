@@ -20,6 +20,8 @@
     "babel-plugin-react-compiler": "1.0.0",
     "eslint": "^9",
     "eslint-config-next": "16.3.1",
-    "typescript": "^5"
+    "sass": "^1.103.0",
+    "typescript": "^5",
+    "typescript-plugin-css-modules": "^5.2.0"
   }
 }
