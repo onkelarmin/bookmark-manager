@@ -4,6 +4,7 @@ import styles from "../auth.module.scss";
 import { FormInput } from "@/components/ui/form-input/form-input";
 import { Button } from "@/components/ui/button/Button";
 import Link from "next/link";
+import { AUTH_INPUT_CONTRAINTS } from "@/schemas/auth";
 
 export default function ResetPage() {
   return (
@@ -18,14 +19,15 @@ export default function ResetPage() {
         </p>
       </div>
 
-      <form className={styles.form}>
+      <form className={styles.form} noValidate>
         <FormInput
           type="email"
           name="email"
           label="Email *"
           autoComplete="email"
           inputMode="email"
-          maxLength={256}
+          maxLength={AUTH_INPUT_CONTRAINTS.email.max}
+          required
         />
         <Button type="submit" variant="primary" fullWidth>
           Send reset link

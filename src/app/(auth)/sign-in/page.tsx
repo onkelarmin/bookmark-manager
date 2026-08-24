@@ -4,6 +4,7 @@ import { AuthFormShell } from "../_components/auth-form-shell";
 import { FormInput } from "@/components/ui/form-input/form-input";
 import { Button } from "@/components/ui/button/Button";
 import Link from "next/link";
+import { AUTH_INPUT_CONTRAINTS } from "@/schemas/auth";
 
 export default function SignInPage() {
   return (
@@ -17,14 +18,15 @@ export default function SignInPage() {
         </p>
       </div>
 
-      <form className={styles.form}>
+      <form className={styles.form} noValidate>
         <FormInput
           type="email"
           name="email"
           label="Email"
           autoComplete="email"
           inputMode="email"
-          maxLength={256}
+          maxLength={AUTH_INPUT_CONTRAINTS.email.max}
+          required
         />
         <FormInput
           type="password"
@@ -32,7 +34,9 @@ export default function SignInPage() {
           label="Password"
           autoComplete="current-password"
           inputMode="text"
-          maxLength={256}
+          minLength={AUTH_INPUT_CONTRAINTS.password.min}
+          maxLength={AUTH_INPUT_CONTRAINTS.password.max}
+          required
         />
         <Button type="submit" variant="primary" fullWidth>
           Log in

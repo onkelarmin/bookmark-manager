@@ -69,6 +69,10 @@ $background-colors: (
     ),
   ),
   text: (
+    error: (
+      light: "red-600" 0.2,
+      dark: "red-600" 0.2,
+    ),
     selection: (
       light: "primary-700",
       dark: "primary-700",
@@ -102,6 +106,16 @@ $foreground-colors: (
     target: (
       light: "neutral-000--light",
       dark: "neutral-000--dark",
+    ),
+  ),
+  icon: (
+    spinner-outer: (
+      light: "neutral-000--light",
+      dark: "neutral-000--dark",
+    ),
+    spinner-inner: (
+      light: "primary-700",
+      dark: "primary-700",
     ),
   ),
 );

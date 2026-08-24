@@ -23,6 +23,14 @@
   gap: var(--space-md);
 }
 
+.error {
+  background-color: var(--bg-text-error);
+  color: var(--fg-text-error);
+  text-align: center;
+  border-radius: var(--br-xs);
+  padding-block: var(--space-xs);
+}
+
 .links {
   display: grid;
   justify-items: center;

@@ -32,6 +32,10 @@
   &[aria-invalid="true"] {
     border: var(--border-input-error);
   }
+
+  &:disabled {
+    cursor: not-allowed;
+  }
 }
 
 .error {

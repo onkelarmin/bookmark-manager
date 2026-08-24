@@ -27,7 +27,7 @@ export function FormInput({
         {...rest}
       />
       {errorMessage && (
-        <span id={`${name}-error`} className={styles.error}>
+        <span id={`${name}-error`} className={styles.error} role="status">
           {errorMessage}
         </span>
       )}

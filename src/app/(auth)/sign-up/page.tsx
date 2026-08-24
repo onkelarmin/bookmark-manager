@@ -1,11 +1,77 @@
+"use client";
+
 import styles from "../auth.module.scss";
 import { Heading } from "@/components/ui/heading/Heading";
 import { AuthFormShell } from "../_components/auth-form-shell";
 import { FormInput } from "@/components/ui/form-input/form-input";
 import { Button } from "@/components/ui/button/Button";
 import Link from "next/link";
+import { AUTH_INPUT_CONTRAINTS, SignUpSchema } from "@/schemas/auth";
+import { ComponentProps, useRef, useState } from "react";
+import z from "zod";
+import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
+import { Spinner } from "@/components/ui/spinner/spinner";
+
+type Errors = {
+  root?: string;
+  name?: string[];
+  email?: string[];
+  password?: string[];
+};
 
 export default function SignUpPage() {
+  const [errors, setErrors] = useState<Errors>({});
+
+  const router = useRouter();
+
+  const [isPending, setIsPending] = useState(false);
+
+  const formRef = useRef<HTMLFormElement>(null);
+
+  const handleSubmit: ComponentProps<"form">["onSubmit"] = async (event) => {
+    event.preventDefault();
+
+    setIsPending(true);
+    clearError("root");
+
+    if (formRef.current == null) return;
+
+    const formData = new FormData(formRef.current);
+
+    const result = SignUpSchema.safeParse(Object.fromEntries(formData));
+    if (!result.success) {
+      setErrors(z.flattenError(result.error).fieldErrors);
+      return;
+    }
+
+    try {
+      const { error } = await authClient.signUp.email(result.data);
+
+      if (error) {
+        setErrors({ root: error.message });
+
+        return;
+      }
+
+      router.push("/");
+    } catch {
+      setErrors({ root: "Something went wrong. Please try again." });
+    } finally {
+      setIsPending(false);
+    }
+  };
+
+  const clearError = (name: keyof Errors) => {
+    if (errors[name] == null) return;
+
+    setErrors((currentErrors) => {
+      const nextErrors = { ...currentErrors };
+      delete nextErrors[name];
+      return nextErrors;
+    });
+  };
+
   return (
     <AuthFormShell>
       <div>
@@ -18,14 +84,23 @@ export default function SignUpPage() {
         </p>
       </div>
 
-      <form className={styles.form}>
+      <form
+        onSubmit={handleSubmit}
+        ref={formRef}
+        className={styles.form}
+        noValidate
+      >
         <FormInput
           type="text"
           name="name"
-          label="Name *"
+          label="Username *"
           autoComplete="name"
           inputMode="text"
-          maxLength={100}
+          maxLength={AUTH_INPUT_CONTRAINTS.name.max}
+          required
+          disabled={isPending}
+          onChange={() => clearError("name")}
+          errorMessage={errors?.name?.at(0)}
         />
         <FormInput
           type="email"
@@ -33,7 +108,11 @@ export default function SignUpPage() {
           label="Email *"
           autoComplete="email"
           inputMode="email"
-          maxLength={256}
+          maxLength={AUTH_INPUT_CONTRAINTS.email.max}
+          required
+          disabled={isPending}
+          onChange={() => clearError("email")}
+          errorMessage={errors?.email?.at(0)}
         />
         <FormInput
           type="password"
@@ -41,11 +120,28 @@ export default function SignUpPage() {
           label="Password *"
           autoComplete="new-password"
           inputMode="text"
-          maxLength={256}
+          minLength={AUTH_INPUT_CONTRAINTS.password.min}
+          maxLength={AUTH_INPUT_CONTRAINTS.password.max}
+          errorMessage={errors?.password?.at(0)}
+          disabled={isPending}
+          onChange={() => clearError("password")}
+          required
         />
-        <Button type="submit" variant="primary" fullWidth>
-          Create account
+        <Button type="submit" variant="primary" fullWidth disabled={isPending}>
+          {isPending ? (
+            <>
+              <Spinner />
+              <span className="mar-inline-start-xs">Creating...</span>
+            </>
+          ) : (
+            "Create account"
+          )}
         </Button>
+        {errors?.root && (
+          <p className={styles.error} role="alert">
+            {errors.root}
+          </p>
+        )}
       </form>
 
       <div className={styles.links}>
