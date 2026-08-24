@@ -1,0 +1,78 @@
+.button {
+  inline-size: fit-content;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  font: var(--font-3-semi-bold);
+  text-transform: none;
+  text-decoration: none;
+  border: none;
+  border-radius: var(--btn-border-radius-default);
+  cursor: pointer;
+  padding-inline: var(--btn-padding-inline-default);
+  padding-block: var(--btn-padding-block-default);
+
+  transition:
+    background-color var(--trans-fast-out),
+    color var(--trans-fast-out),
+    outline-color var(--trans-fast-in),
+    outline-offset var(--trans-fast-out-sensitive);
+
+  &[data-full-width] {
+    inline-size: 100%;
+  }
+
+  &[data-variant="primary"] {
+    --bg: var(--btn-bg-color-idle-primary);
+
+    position: relative;
+    z-index: 1;
+    background:
+      linear-gradient(var(--btn-border-color-idle-primary), var(--bg))
+        border-box,
+      linear-gradient(var(--bg), var(--bg)) border-box;
+    border: var(--btn-border-width-primary) solid transparent;
+    color: var(--btn-fg-color-idle-primary);
+
+    &::before {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      inset: 0;
+      background-color: var(--bg);
+      border-radius: calc(
+        var(--btn-border-radius-default) - var(--btn-border-width-primary)
+      );
+      transition: background-color var(--trans-fast-out);
+    }
+
+    @media (hover: hover) {
+      &:not(:disabled):hover {
+        --bg: var(--btn-bg-color-hover-primary);
+
+        color: var(--btn-fg-color-hover-primary);
+      }
+    }
+
+    &:disabled {
+      --bg: var(--btn-bg-color-disabled-primary);
+
+      color: var(--btn-fg-color-disabled-primary);
+      cursor: not-allowed;
+    }
+  }
+  &[data-variant="link"] {
+    font: var(--font-4-semi-bold);
+    background-color: var(--btn-bg-color-idle-link);
+    color: var(--btn-fg-color-idle-link);
+    border-radius: var(--btn-border-radius-link);
+    padding: 0;
+
+    @media (hover: hover) {
+      &:not(:disabled):hover {
+        color: var(--btn-fg-color-hover-link);
+      }
+    }
+  }
+}

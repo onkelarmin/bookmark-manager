@@ -1,0 +1,36 @@
+.layout {
+  block-size: 100dvh;
+  display: grid;
+  place-items: center;
+  padding-inline-start: var(--pad-wrapper-start);
+  padding-inline-end: var(--pad-wrapper-end);
+}
+
+.shell {
+  inline-size: min(100%, 28rem);
+  display: grid;
+  gap: var(--space-xl);
+  align-content: center;
+  background-color: var(--bg-container-default);
+  border-radius: var(--br-lg);
+  border: var(--border-container);
+  padding-inline: var(--space-xl);
+  padding-block: var(--space-2xl);
+}
+
+.form {
+  display: grid;
+  gap: var(--space-md);
+}
+
+.links {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-sm);
+
+  .link {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+  }
+}

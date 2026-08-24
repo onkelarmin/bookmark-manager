@@ -2,46 +2,75 @@
 
 // Buttons
 $button-colors: (
-  default: (
+  primary: (
     idle: (
       bg: (
-        light: "neutral-000",
+        light: "primary-700",
+        dark: "primary-700",
       ),
       fg: (
-        light: "neutral-900",
+        light: "neutral-000--light",
+        dark: "neutral-000--dark",
+      ),
+      border: (
+        light: "neutral-000--light" 0.12,
+        dark: "neutral-000--dark" 0.12,
       ),
     ),
     hover: (
       bg: (
-        light: "neutral-000",
+        light: "primary-800",
+        dark: "primary-800",
       ),
       fg: (
-        light: "neutral-900",
+        light: "neutral-000--light",
+        dark: "neutral-000--dark",
+      ),
+    ),
+    disabled: (
+      bg: (
+        light: "primary-200",
+        dark: "primary-300",
+      ),
+      fg: (
+        light: "neutral-400--light",
+        dark: "neutral-100--dark",
+      ),
+    ),
+  ),
+  link: (
+    idle: (
+      bg: (
+        light: "transparent",
+        dark: "transparent",
+      ),
+      fg: (
+        light: "neutral-900--light",
+        dark: "neutral-000--dark",
+      ),
+    ),
+    hover: (
+      fg: (
+        light: "primary-700",
+        dark: "neutral-100--dark",
       ),
     ),
   ),
 );
 
 $button-appearance: (
-  padding-inline-start: (
-    default: rem(20px),
-  ),
-  padding-inline-end: (
-    default: rem(8px),
+  padding-inline: (
+    default: rem(18px),
   ),
   padding-block: (
-    default: rem(8px),
-  ),
-  border-width: (
-    default: 0px,
+    default: rem(12px),
   ),
   border-radius: (
-    default: 1000px,
+    default: rem(8px),
+    link: rem(2px),
   ),
-  svg-width: (
-    default: rem(14px),
-  ),
-  gap: (
-    default: rem(12px),
+  border-width: (
+    primary: rem(2px),
+    secondary: rem(1px),
   ),
 );

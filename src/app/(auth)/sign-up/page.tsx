@@ -5,23 +5,32 @@ import { FormInput } from "@/components/ui/form-input/form-input";
 import { Button } from "@/components/ui/button/Button";
 import Link from "next/link";
 
-export default function SignInPage() {
+export default function SignUpPage() {
   return (
     <AuthFormShell>
       <div>
         <Heading tag="h1" size="h1">
-          Log in to your account
+          Create your account
         </Heading>
         <p className="mar-block-start-xs">
-          Welcome back! Please enter your details.
+          Join us and start saving your favorite links — organized, searchable,
+          and always within reach.
         </p>
       </div>
 
       <form className={styles.form}>
         <FormInput
+          type="text"
+          name="name"
+          label="Name *"
+          autoComplete="name"
+          inputMode="text"
+          maxLength={100}
+        />
+        <FormInput
           type="email"
           name="email"
-          label="Email"
+          label="Email *"
           autoComplete="email"
           inputMode="email"
           maxLength={256}
@@ -29,30 +38,22 @@ export default function SignInPage() {
         <FormInput
           type="password"
           name="password"
-          label="Password"
-          autoComplete="current-password"
+          label="Password *"
+          autoComplete="new-password"
           inputMode="text"
           maxLength={256}
         />
         <Button type="submit" variant="primary" fullWidth>
-          Log in
+          Create account
         </Button>
       </form>
 
       <div className={styles.links}>
-        {/* Reset */}
+        {/* Log in */}
         <div className={styles.link}>
-          <p>Forgot password?</p>
-          <Button As={Link} variant="link" href="/reset">
-            Reset
-          </Button>
-        </div>
-
-        {/* Sign up */}
-        <div className={styles.link}>
-          <p>Don’t have an account?</p>
-          <Button As={Link} variant="link" href="/sign-up">
-            Sign up
+          <p>Already have an account?</p>
+          <Button As={Link} variant="link" href="/sign-in">
+            Log in
           </Button>
         </div>
       </div>

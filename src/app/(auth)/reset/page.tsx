@@ -1,19 +1,20 @@
-import styles from "../auth.module.scss";
 import { Heading } from "@/components/ui/heading/Heading";
 import { AuthFormShell } from "../_components/auth-form-shell";
+import styles from "../auth.module.scss";
 import { FormInput } from "@/components/ui/form-input/form-input";
 import { Button } from "@/components/ui/button/Button";
 import Link from "next/link";
 
-export default function SignInPage() {
+export default function ResetPage() {
   return (
     <AuthFormShell>
       <div>
         <Heading tag="h1" size="h1">
-          Log in to your account
+          Forgot your password?
         </Heading>
         <p className="mar-block-start-xs">
-          Welcome back! Please enter your details.
+          Enter your email address below and we’ll send you a link to reset your
+          password.
         </p>
       </div>
 
@@ -21,38 +22,21 @@ export default function SignInPage() {
         <FormInput
           type="email"
           name="email"
-          label="Email"
+          label="Email *"
           autoComplete="email"
           inputMode="email"
           maxLength={256}
         />
-        <FormInput
-          type="password"
-          name="password"
-          label="Password"
-          autoComplete="current-password"
-          inputMode="text"
-          maxLength={256}
-        />
         <Button type="submit" variant="primary" fullWidth>
-          Log in
+          Send reset link
         </Button>
       </form>
 
       <div className={styles.links}>
-        {/* Reset */}
+        {/* Log in */}
         <div className={styles.link}>
-          <p>Forgot password?</p>
-          <Button As={Link} variant="link" href="/reset">
-            Reset
-          </Button>
-        </div>
-
-        {/* Sign up */}
-        <div className={styles.link}>
-          <p>Don’t have an account?</p>
-          <Button As={Link} variant="link" href="/sign-up">
-            Sign up
+          <Button As={Link} variant="link" href="/sign-in">
+            Back to login
           </Button>
         </div>
       </div>
