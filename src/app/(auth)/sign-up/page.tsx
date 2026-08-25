@@ -29,6 +29,16 @@ export default function SignUpPage() {
 
   const formRef = useRef<HTMLFormElement>(null);
 
+  const clearError = (name: keyof Errors) => {
+    if (errors[name] == null) return;
+
+    setErrors((currentErrors) => {
+      const nextErrors = { ...currentErrors };
+      delete nextErrors[name];
+      return nextErrors;
+    });
+  };
+
   const handleSubmit: ComponentProps<"form">["onSubmit"] = async (event) => {
     event.preventDefault();
 
@@ -55,21 +65,12 @@ export default function SignUpPage() {
       }
 
       router.push("/");
+      formRef.current.reset();
     } catch {
       setErrors({ root: "Something went wrong. Please try again." });
     } finally {
       setIsPending(false);
     }
-  };
-
-  const clearError = (name: keyof Errors) => {
-    if (errors[name] == null) return;
-
-    setErrors((currentErrors) => {
-      const nextErrors = { ...currentErrors };
-      delete nextErrors[name];
-      return nextErrors;
-    });
   };
 
   return (
@@ -122,10 +123,10 @@ export default function SignUpPage() {
           inputMode="text"
           minLength={AUTH_INPUT_CONTRAINTS.password.min}
           maxLength={AUTH_INPUT_CONTRAINTS.password.max}
-          errorMessage={errors?.password?.at(0)}
+          required
           disabled={isPending}
           onChange={() => clearError("password")}
-          required
+          errorMessage={errors?.password?.at(0)}
         />
         <Button type="submit" variant="primary" fullWidth disabled={isPending}>
           {isPending ? (

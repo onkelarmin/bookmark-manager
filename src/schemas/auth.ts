@@ -60,3 +60,10 @@ export const SignUpSchema = z.object({
   email: EmailSchema,
   password: PasswordSchema,
 });
+
+export const SignInSchema = z.object({
+  email: EmailSchema,
+  password: z.preprocess((value: unknown) => {
+    return value === "" ? undefined : value;
+  }, z.string("Please enter your password")),
+});
