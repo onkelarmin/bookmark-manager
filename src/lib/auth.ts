@@ -5,15 +5,41 @@ import { nextCookies } from "better-auth/next-js";
 import { APIError, createAuthMiddleware } from "better-auth/api";
 import { SignUpSchema } from "@/schemas/auth";
 import { schema } from "@/db/schema/auth";
+import { Resend } from "resend";
+import { after } from "next/server";
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
+    requireEmailVerification: true,
   },
   database: drizzleAdapter(db, {
     provider: "pg",
     schema,
   }),
+  emailVerification: {
+    sendVerificationEmail: async ({ user, url }) => {
+      after(async () => {
+        const { error } = await resend.emails.send({
+          from: process.env.AUTH_EMAIL_FROM!,
+          to: user.email,
+          template: {
+            id: "bookmark-mangar",
+            variables: {
+              user_name: user.name,
+              verification_url: url,
+            },
+          },
+        });
+
+        if (error) {
+          console.error("Verification email failed", error);
+        }
+      });
+    },
+  },
   hooks: {
     before: createAuthMiddleware(async (ctx) => {
       if (ctx.path === "/sign-up/email") {

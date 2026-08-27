@@ -12,6 +12,7 @@ import z from "zod";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { Spinner } from "@/components/ui/spinner/spinner";
+import { useVerificationContext } from "@/app/hooks/useVerificationContext";
 
 type Errors = {
   root?: string;
@@ -21,13 +22,14 @@ type Errors = {
 };
 
 export default function SignUpPage() {
+  const formRef = useRef<HTMLFormElement>(null);
+
   const [errors, setErrors] = useState<Errors>({});
+  const [isPending, setIsPending] = useState(false);
 
   const router = useRouter();
 
-  const [isPending, setIsPending] = useState(false);
-
-  const formRef = useRef<HTMLFormElement>(null);
+  const { setVerificationContext } = useVerificationContext();
 
   const clearError = (name: keyof Errors) => {
     if (errors[name] == null) return;
@@ -52,6 +54,7 @@ export default function SignUpPage() {
     const result = SignUpSchema.safeParse(Object.fromEntries(formData));
     if (!result.success) {
       setErrors(z.flattenError(result.error).fieldErrors);
+      setIsPending(false);
       return;
     }
 
@@ -64,8 +67,11 @@ export default function SignUpPage() {
         return;
       }
 
-      router.push("/");
       formRef.current.reset();
+
+      setVerificationContext({ source: "sign-up", email: result.data.email });
+
+      router.replace("/verify-email");
     } catch {
       setErrors({ root: "Something went wrong. Please try again." });
     } finally {

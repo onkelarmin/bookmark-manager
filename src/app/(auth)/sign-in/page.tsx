@@ -12,21 +12,26 @@ import { useRouter } from "next/navigation";
 import { Spinner } from "@/components/ui/spinner/spinner";
 import z from "zod";
 import { authClient } from "@/lib/auth-client";
+import { useVerificationContext } from "@/app/hooks/useVerificationContext";
 
 type Errors = {
-  root?: string;
+  root?: {
+    code?: string;
+    message?: string;
+  };
   email?: string[];
   password?: string[];
 };
 
 export default function SignInPage() {
+  const formRef = useRef<HTMLFormElement>(null);
+
   const [errors, setErrors] = useState<Errors>({});
+  const [isPending, setIsPending] = useState(false);
 
   const router = useRouter();
 
-  const [isPending, setIsPending] = useState(false);
-
-  const formRef = useRef<HTMLFormElement>(null);
+  const { setVerificationContext } = useVerificationContext();
 
   const clearError = (name: keyof Errors) => {
     if (errors[name] == null) return;
@@ -51,6 +56,7 @@ export default function SignInPage() {
     const result = SignInSchema.safeParse(Object.fromEntries(formData));
     if (!result.success) {
       setErrors(z.flattenError(result.error).fieldErrors);
+      setIsPending(false);
       return;
     }
 
@@ -58,18 +64,33 @@ export default function SignInPage() {
       const { error } = await authClient.signIn.email(result.data);
 
       if (error) {
-        setErrors({ root: error.message });
+        setErrors({ root: { code: error.code, message: error.message } });
 
         return;
       }
 
-      router.push("/");
+      router.replace("/");
       formRef.current.reset();
     } catch {
-      setErrors({ root: "Something went wrong. Please try again." });
+      setErrors({
+        root: {
+          code: "SIGN_IN_ERROR",
+          message: "Something went wrong. Please try again.",
+        },
+      });
     } finally {
       setIsPending(false);
     }
+  };
+
+  const onResendClick = () => {
+    if (formRef.current != null) {
+      const email = String(new FormData(formRef.current).get("email"));
+
+      setVerificationContext({ source: "sign-in", email });
+    }
+
+    router.push("/verify-email");
   };
 
   return (
@@ -124,10 +145,16 @@ export default function SignInPage() {
             "Log in"
           )}
         </Button>
+
         {errors?.root && (
           <p className={styles.error} role="alert">
-            {errors.root}
+            {errors.root.message}
           </p>
+        )}
+        {errors?.root?.code === "EMAIL_NOT_VERIFIED" && (
+          <Button onClick={onResendClick} variant="link" fullWidth>
+            Resend verification email
+          </Button>
         )}
       </form>
 

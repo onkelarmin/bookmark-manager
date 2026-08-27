@@ -1,3 +1,4 @@
+import { emit } from "process";
 import z from "zod";
 
 export const AUTH_INPUT_CONTRAINTS = {
@@ -66,4 +67,13 @@ export const SignInSchema = z.object({
   password: z.preprocess((value: unknown) => {
     return value === "" ? undefined : value;
   }, z.string("Please enter your password")),
+});
+
+export const VerifyEmailSchema = z.object({
+  email: EmailSchema,
+});
+
+export const VerificationContextSchema = z.object({
+  source: z.union([z.literal("sign-up"), z.literal("sign-in")]),
+  email: z.string(),
 });

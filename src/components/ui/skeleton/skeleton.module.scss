@@ -1,0 +1,30 @@
+.skeleton {
+  inline-size: 15ch;
+  block-size: 1em;
+  background-color: var(--bg-container-skeleton);
+  border-radius: var(--br-sm);
+  animation: skeleton var(--trans-x-slow-in-out) infinite alternate;
+}
+
+.skeletonInput {
+  inline-size: 100%;
+  block-size: 3.5em;
+}
+
+.skeletonButton {
+  block-size: 3.5em;
+  inline-size: 9em;
+}
+
+.fullWidth {
+  inline-size: 100%;
+}
+
+@keyframes skeleton {
+  from {
+    opacity: 0.5;
+  }
+  to {
+    opacity: 1;
+  }
+}

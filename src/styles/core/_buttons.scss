@@ -38,6 +38,28 @@ $button-colors: (
       ),
     ),
   ),
+  secondary: (
+    idle: (
+      bg: (
+        light: "transparent",
+        dark: "transparent",
+      ),
+      fg: (
+        light: "neutral-900--light",
+        dark: "neutral-000--dark",
+      ),
+      border: (
+        light: "neutral-400--light",
+        dark: "neutral-400--dark",
+      ),
+    ),
+    hover: (
+      bg: (
+        light: "neutral-100--light",
+        dark: "neutral-600--dark",
+      ),
+    ),
+  ),
   link: (
     idle: (
       bg: (
