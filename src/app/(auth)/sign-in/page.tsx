@@ -6,13 +6,18 @@ import { AuthFormShell } from "../_components/auth-form-shell";
 import { FormInput } from "@/components/ui/form-input/form-input";
 import { Button } from "@/components/ui/button/Button";
 import Link from "next/link";
-import { AUTH_INPUT_CONTRAINTS, SignInSchema } from "@/schemas/auth";
+import {
+  AUTH_INPUT_CONTRAINTS,
+  EmailSchema,
+  SignInSchema,
+} from "@/schemas/auth";
 import { ComponentProps, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Spinner } from "@/components/ui/spinner/spinner";
 import z from "zod";
 import { authClient } from "@/lib/auth-client";
-import { useVerificationContext } from "@/app/hooks/useVerificationContext";
+import { useSessionStorage } from "@/app/hooks/useSessionStorage";
+import { clearError } from "@/lib/utils/clear-error";
 
 type Errors = {
   root?: {
@@ -25,29 +30,20 @@ type Errors = {
 
 export default function SignInPage() {
   const formRef = useRef<HTMLFormElement>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
 
   const [errors, setErrors] = useState<Errors>({});
   const [isPending, setIsPending] = useState(false);
 
   const router = useRouter();
 
-  const { setVerificationContext } = useVerificationContext();
-
-  const clearError = (name: keyof Errors) => {
-    if (errors[name] == null) return;
-
-    setErrors((currentErrors) => {
-      const nextErrors = { ...currentErrors };
-      delete nextErrors[name];
-      return nextErrors;
-    });
-  };
+  const emailStorage = useSessionStorage("email", EmailSchema);
 
   const handleSubmit: ComponentProps<"form">["onSubmit"] = async (event) => {
     event.preventDefault();
 
     setIsPending(true);
-    clearError("root");
+    clearError(errors, setErrors, "root");
 
     if (formRef.current == null) return;
 
@@ -83,14 +79,11 @@ export default function SignInPage() {
     }
   };
 
-  const onResendClick = () => {
-    if (formRef.current != null) {
-      const email = String(new FormData(formRef.current).get("email"));
+  const setEmailStorage = () => {
+    const email = emailRef.current?.value;
+    if (email == null) return;
 
-      setVerificationContext({ source: "sign-in", email });
-    }
-
-    router.push("/verify-email");
+    emailStorage.setStorage(email);
   };
 
   return (
@@ -111,6 +104,7 @@ export default function SignInPage() {
         noValidate
       >
         <FormInput
+          ref={emailRef}
           type="email"
           name="email"
           label="Email"
@@ -119,7 +113,7 @@ export default function SignInPage() {
           maxLength={AUTH_INPUT_CONTRAINTS.email.max}
           required
           disabled={isPending}
-          onChange={() => clearError("email")}
+          onChange={() => clearError(errors, setErrors, "email")}
           errorMessage={errors?.email?.at(0)}
         />
         <FormInput
@@ -132,7 +126,7 @@ export default function SignInPage() {
           maxLength={AUTH_INPUT_CONTRAINTS.password.max}
           required
           disabled={isPending}
-          onChange={() => clearError("password")}
+          onChange={() => clearError(errors, setErrors, "password")}
           errorMessage={errors?.password?.at(0)}
         />
         <Button type="submit" variant="primary" fullWidth disabled={isPending}>
@@ -152,7 +146,13 @@ export default function SignInPage() {
           </p>
         )}
         {errors?.root?.code === "EMAIL_NOT_VERIFIED" && (
-          <Button onClick={onResendClick} variant="link" fullWidth>
+          <Button
+            As={Link}
+            variant="link"
+            href="/verify-email?source=sign-in"
+            onClick={setEmailStorage}
+            fullWidth
+          >
             Resend verification email
           </Button>
         )}
@@ -162,7 +162,12 @@ export default function SignInPage() {
         {/* Reset */}
         <div className={styles.link}>
           <p>Forgot password?</p>
-          <Button As={Link} variant="link" href="/reset">
+          <Button
+            As={Link}
+            variant="link"
+            href="/forgot-password"
+            onClick={setEmailStorage}
+          >
             Reset
           </Button>
         </div>

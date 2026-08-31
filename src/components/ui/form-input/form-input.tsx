@@ -1,12 +1,11 @@
 import styles from "./form-input.module.scss";
-import { ComponentProps, ComponentPropsWithoutRef } from "react";
+import { ComponentPropsWithRef } from "react";
 
 type FormInputProps = {
   name: string;
-  type: ComponentProps<"input">["type"];
   label: string;
   errorMessage?: string;
-} & ComponentPropsWithoutRef<"input">;
+} & ComponentPropsWithRef<"input">;
 
 export function FormInput({
   type,

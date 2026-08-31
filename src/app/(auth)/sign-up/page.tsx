@@ -6,13 +6,18 @@ import { AuthFormShell } from "../_components/auth-form-shell";
 import { FormInput } from "@/components/ui/form-input/form-input";
 import { Button } from "@/components/ui/button/Button";
 import Link from "next/link";
-import { AUTH_INPUT_CONTRAINTS, SignUpSchema } from "@/schemas/auth";
+import {
+  AUTH_INPUT_CONTRAINTS,
+  EmailSchema,
+  SignUpSchema,
+} from "@/schemas/auth";
 import { ComponentProps, useRef, useState } from "react";
 import z from "zod";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { Spinner } from "@/components/ui/spinner/spinner";
-import { useVerificationContext } from "@/app/hooks/useVerificationContext";
+import { useSessionStorage } from "@/app/hooks/useSessionStorage";
+import { clearError } from "@/lib/utils/clear-error";
 
 type Errors = {
   root?: string;
@@ -24,28 +29,18 @@ type Errors = {
 export default function SignUpPage() {
   const formRef = useRef<HTMLFormElement>(null);
 
+  const { setStorage } = useSessionStorage("email", EmailSchema);
+
   const [errors, setErrors] = useState<Errors>({});
   const [isPending, setIsPending] = useState(false);
 
   const router = useRouter();
 
-  const { setVerificationContext } = useVerificationContext();
-
-  const clearError = (name: keyof Errors) => {
-    if (errors[name] == null) return;
-
-    setErrors((currentErrors) => {
-      const nextErrors = { ...currentErrors };
-      delete nextErrors[name];
-      return nextErrors;
-    });
-  };
-
   const handleSubmit: ComponentProps<"form">["onSubmit"] = async (event) => {
     event.preventDefault();
 
     setIsPending(true);
-    clearError("root");
+    clearError(errors, setErrors, "root");
 
     if (formRef.current == null) return;
 
@@ -69,9 +64,9 @@ export default function SignUpPage() {
 
       formRef.current.reset();
 
-      setVerificationContext({ source: "sign-up", email: result.data.email });
+      setStorage(result.data.email);
 
-      router.replace("/verify-email");
+      router.replace("/verify-email?source=sign-up");
     } catch {
       setErrors({ root: "Something went wrong. Please try again." });
     } finally {
@@ -106,7 +101,7 @@ export default function SignUpPage() {
           maxLength={AUTH_INPUT_CONTRAINTS.name.max}
           required
           disabled={isPending}
-          onChange={() => clearError("name")}
+          onChange={() => clearError(errors, setErrors, "name")}
           errorMessage={errors?.name?.at(0)}
         />
         <FormInput
@@ -118,7 +113,7 @@ export default function SignUpPage() {
           maxLength={AUTH_INPUT_CONTRAINTS.email.max}
           required
           disabled={isPending}
-          onChange={() => clearError("email")}
+          onChange={() => clearError(errors, setErrors, "email")}
           errorMessage={errors?.email?.at(0)}
         />
         <FormInput
@@ -131,7 +126,7 @@ export default function SignUpPage() {
           maxLength={AUTH_INPUT_CONTRAINTS.password.max}
           required
           disabled={isPending}
-          onChange={() => clearError("password")}
+          onChange={() => clearError(errors, setErrors, "password")}
           errorMessage={errors?.password?.at(0)}
         />
         <Button type="submit" variant="primary" fullWidth disabled={isPending}>

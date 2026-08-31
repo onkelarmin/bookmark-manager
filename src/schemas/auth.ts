@@ -68,12 +68,3 @@ export const SignInSchema = z.object({
     return value === "" ? undefined : value;
   }, z.string("Please enter your password")),
 });
-
-export const VerifyEmailSchema = z.object({
-  email: EmailSchema,
-});
-
-export const VerificationContextSchema = z.object({
-  source: z.union([z.literal("sign-up"), z.literal("sign-in")]),
-  email: z.string(),
-});

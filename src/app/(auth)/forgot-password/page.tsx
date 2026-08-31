@@ -1,12 +1,32 @@
+"use client";
+
 import { Heading } from "@/components/ui/heading/Heading";
 import { AuthFormShell } from "../_components/auth-form-shell";
 import styles from "../auth.module.scss";
 import { FormInput } from "@/components/ui/form-input/form-input";
 import { Button } from "@/components/ui/button/Button";
 import Link from "next/link";
-import { AUTH_INPUT_CONTRAINTS } from "@/schemas/auth";
+import { AUTH_INPUT_CONTRAINTS, EmailSchema } from "@/schemas/auth";
+import { useSessionStorage } from "@/app/hooks/useSessionStorage";
+import { useEffect, useRef } from "react";
 
-export default function ResetPage() {
+export default function ForgotPasswordPage() {
+  const emailRef = useRef<HTMLInputElement>(null);
+
+  const { getStoredValue, clearStorage } = useSessionStorage(
+    "email",
+    EmailSchema,
+  );
+
+  useEffect(() => {
+    const email = getStoredValue();
+
+    if (email != null && emailRef.current != null) {
+      emailRef.current.value = email;
+      clearStorage();
+    }
+  }, [getStoredValue, clearStorage]);
+
   return (
     <AuthFormShell>
       <div>
@@ -21,6 +41,7 @@ export default function ResetPage() {
 
       <form className={styles.form} noValidate>
         <FormInput
+          ref={emailRef}
           type="email"
           name="email"
           label="Email *"
