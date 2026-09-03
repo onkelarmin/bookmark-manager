@@ -1,6 +1,12 @@
 "use client";
 
-import { ComponentProps, useLayoutEffect, useRef, useState } from "react";
+import {
+  ComponentProps,
+  useCallback,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import styles from "../auth.module.scss";
 import { useSessionStorage } from "@/app/hooks/useSessionStorage";
 import {
@@ -41,6 +47,12 @@ export function SignUpContent() {
   const { setStorage } = useSessionStorage("email", EmailSchema);
 
   const router = useRouter();
+
+  const passwordRef = useCallback((password: HTMLInputElement | null) => {
+    return () => {
+      if (password != null) password.value = "";
+    };
+  }, []);
 
   const handleSubmit: ComponentProps<"form">["onSubmit"] = async (event) => {
     event.preventDefault();
@@ -113,11 +125,7 @@ export function SignUpContent() {
           errorMessage={errors?.email?.at(0)}
         />
         <FormInput
-          ref={(password) => {
-            return () => {
-              if (password != null) password.value = "";
-            };
-          }}
+          ref={passwordRef}
           type="password"
           name="password"
           label="Password *"

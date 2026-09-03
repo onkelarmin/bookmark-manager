@@ -1,6 +1,12 @@
 "use client";
 
-import { ComponentProps, useLayoutEffect, useRef, useState } from "react";
+import {
+  ComponentProps,
+  useCallback,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import styles from "../auth.module.scss";
 import { useRouter } from "next/navigation";
 import { useSessionStorage } from "@/app/hooks/useSessionStorage";
@@ -44,6 +50,12 @@ export function SignInContent() {
   const router = useRouter();
 
   const emailStorage = useSessionStorage("email", EmailSchema);
+
+  const passwordRef = useCallback((password: HTMLInputElement | null) => {
+    return () => {
+      if (password != null) password.value = "";
+    };
+  }, []);
 
   const handleSubmit: ComponentProps<"form">["onSubmit"] = async (event) => {
     event.preventDefault();
@@ -114,11 +126,7 @@ export function SignInContent() {
           errorMessage={errors?.email?.at(0)}
         />
         <FormInput
-          ref={(password) => {
-            return () => {
-              if (password != null) password.value = "";
-            };
-          }}
+          ref={passwordRef}
           type="password"
           name="password"
           label="Password"
