@@ -1,10 +1,14 @@
 "use client";
 
-import { FormInput } from "@/components/ui/form-input/form-input";
 import styles from "../auth.module.scss";
+import { useSessionStorage } from "@/app/hooks/useSessionStorage";
+import { Button } from "@/components/ui/button/Button";
+import { FormInput } from "@/components/ui/form-input/form-input";
+import { Spinner } from "@/components/ui/spinner/spinner";
 import { authClient } from "@/lib/auth-client";
+import { clearError } from "@/lib/utils/clear-error";
 import { AUTH_INPUT_CONTRAINTS, EmailSchema } from "@/schemas/auth";
-import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 import {
   ComponentProps,
   useEffect,
@@ -13,18 +17,13 @@ import {
   useState,
 } from "react";
 import z from "zod";
-import { Spinner } from "@/components/ui/spinner/spinner";
-import { Button } from "@/components/ui/button/Button";
-import Link from "next/link";
-import { useSessionStorage } from "@/app/hooks/useSessionStorage";
-import { clearError } from "@/lib/utils/clear-error";
 
 type Errors = {
   root?: string;
   email?: string[];
 };
 
-export function VerifyEmailContent() {
+export function ForgotPasswordContent() {
   const formRef = useRef<HTMLFormElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
 
@@ -32,19 +31,7 @@ export function VerifyEmailContent() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [errors, setErrors] = useState<Errors>({});
 
-  //   Cleanup transient state
-  useLayoutEffect(() => {
-    return () => {
-      setIsSuccess(false);
-      setIsPending(false);
-      setErrors({});
-    };
-  }, []);
-
-  const searchParams = useSearchParams();
-  const source = searchParams.get("source");
-
-  // Prepopulate email
+  //   Prepopulate email
   const { getStoredValue, clearStorage } = useSessionStorage(
     "email",
     EmailSchema,
@@ -59,6 +46,15 @@ export function VerifyEmailContent() {
     }
   }, [getStoredValue, clearStorage]);
 
+  //   Cleanup transient state
+  useLayoutEffect(() => {
+    return () => {
+      setIsSuccess(false);
+      setIsPending(false);
+      setErrors({});
+    };
+  }, []);
+
   const handleSubmit: ComponentProps<"form">["onSubmit"] = async (event) => {
     event.preventDefault();
 
@@ -70,7 +66,7 @@ export function VerifyEmailContent() {
 
     const result = z
       .object({ email: EmailSchema })
-      .safeParse(emailRef.current?.value);
+      .safeParse({ email: emailRef.current?.value });
     if (!result.success) {
       setErrors(z.flattenError(result.error).fieldErrors);
       setIsPending(false);
@@ -78,7 +74,7 @@ export function VerifyEmailContent() {
     }
 
     try {
-      const { error } = await authClient.sendVerificationEmail({
+      const { error } = await authClient.requestPasswordReset({
         email: result.data.email,
       });
 
@@ -99,22 +95,6 @@ export function VerifyEmailContent() {
 
   return (
     <>
-      {source === "sign-up" ? (
-        <p>
-          Check your inbox for a verification link. It may take a minute to
-          arrive.
-        </p>
-      ) : source === "sign-in" ? (
-        <p>
-          Your email address has not been verified yet. Send a new verification
-          link to continue.
-        </p>
-      ) : (
-        <p>
-          Enter your email address and we’ll send a verification link if one is
-          available.
-        </p>
-      )}
       <form
         ref={formRef}
         onSubmit={handleSubmit}
@@ -125,7 +105,7 @@ export function VerifyEmailContent() {
           ref={emailRef}
           type="email"
           name="email"
-          label="Email"
+          label="Email *"
           autoComplete="email"
           inputMode="email"
           maxLength={AUTH_INPUT_CONTRAINTS.email.max}
@@ -137,22 +117,18 @@ export function VerifyEmailContent() {
           }}
           errorMessage={errors?.email?.at(0)}
         />
-        <Button
-          type="submit"
-          variant={source === "sign-up" ? "secondary" : "primary"}
-          disabled={isPending}
-          fullWidth
-        >
+        <Button type="submit" variant="primary" disabled={isPending} fullWidth>
           {isPending ? (
             <>
               <Spinner />
               <span className="mar-inline-start-xs">Sending...</span>
             </>
           ) : (
-            <>{source === "sign-up" ? "Resend " : "Send "} verification email</>
+            "Send reset link"
           )}
         </Button>
       </form>
+
       {errors?.root && (
         <p className={styles.error} role="alert">
           {errors.root}
@@ -160,17 +136,17 @@ export function VerifyEmailContent() {
       )}
 
       {isSuccess && (
-        <p>If an eligible account exists, a verification link has been sent.</p>
+        <p>If an eligible account exists, a reset link has been sent.</p>
       )}
 
-      <Button
-        As={Link}
-        href="/sign-in"
-        variant={source === "sign-up" ? "primary" : "secondary"}
-        fullWidth
-      >
-        Back to log in
-      </Button>
+      <div className={styles.links}>
+        {/* Log in */}
+        <div className={styles.link}>
+          <Button As={Link} variant="link" href="/sign-in">
+            Back to login
+          </Button>
+        </div>
+      </div>
     </>
   );
 }
