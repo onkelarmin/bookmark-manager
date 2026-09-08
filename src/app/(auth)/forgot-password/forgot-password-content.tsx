@@ -76,6 +76,7 @@ export function ForgotPasswordContent() {
     try {
       const { error } = await authClient.requestPasswordReset({
         email: result.data.email,
+        redirectTo: "/reset-password",
       });
 
       if (error) {

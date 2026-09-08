@@ -8,11 +8,14 @@ import { schema } from "@/db/schema/auth";
 import { Resend } from "resend";
 import { after } from "next/server";
 
+const VERIFY_EMAIL_EXPIRATION = 3600;
 const RESET_TOKEN_EXPIRATION = 3600;
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const auth = betterAuth({
+  baseURL: process.env.BETTER_AUTH_URL,
+
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: true,
@@ -24,7 +27,7 @@ export const auth = betterAuth({
           template: {
             id: "password-reset",
             variables: {
-              expiration_time: `${RESET_TOKEN_EXPIRATION / 60} minutes`,
+              expiration_time: RESET_TOKEN_EXPIRATION / 60,
               user_name: user.name,
               reset_password_url: url,
             },
@@ -38,10 +41,12 @@ export const auth = betterAuth({
     },
     resetPasswordTokenExpiresIn: RESET_TOKEN_EXPIRATION,
   },
+
   database: drizzleAdapter(db, {
     provider: "pg",
     schema,
   }),
+
   emailVerification: {
     sendVerificationEmail: async ({ user, url }) => {
       after(async () => {
@@ -53,6 +58,7 @@ export const auth = betterAuth({
             variables: {
               user_name: user.name,
               verification_url: url,
+              expiration_time: VERIFY_EMAIL_EXPIRATION / 60,
             },
           },
         });
@@ -62,7 +68,10 @@ export const auth = betterAuth({
         }
       });
     },
+
+    expiresIn: VERIFY_EMAIL_EXPIRATION,
   },
+
   hooks: {
     before: createAuthMiddleware(async (ctx) => {
       if (ctx.path === "/sign-up/email") {
@@ -76,5 +85,6 @@ export const auth = betterAuth({
       }
     }),
   },
+
   plugins: [nextCookies()],
 });

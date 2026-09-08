@@ -36,6 +36,8 @@ export function SignInContent() {
   const formRef = useRef<HTMLFormElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
 
+  const router = useRouter();
+
   const [errors, setErrors] = useState<Errors>({});
   const [isPending, setIsPending] = useState(false);
 
@@ -46,8 +48,6 @@ export function SignInContent() {
       setErrors({});
     };
   }, []);
-
-  const router = useRouter();
 
   const emailStorage = useSessionStorage("email", EmailSchema);
 

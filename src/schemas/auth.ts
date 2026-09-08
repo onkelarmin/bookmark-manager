@@ -1,5 +1,5 @@
 import { emit } from "process";
-import z from "zod";
+import z, { refine } from "zod";
 
 export const AUTH_INPUT_CONTRAINTS = {
   name: {
@@ -68,3 +68,13 @@ export const SignInSchema = z.object({
     return value === "" ? undefined : value;
   }, z.string("Please enter your password")),
 });
+
+export const ResetPasswordSchema = z
+  .object({
+    password: PasswordSchema,
+    confirmPassword: z.string(),
+  })
+  .refine(
+    (data) => data.password === data.confirmPassword,
+    "Passwords need to match",
+  );

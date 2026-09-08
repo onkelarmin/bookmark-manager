@@ -18,6 +18,12 @@ import { Button } from "@/components/ui/button/Button";
 import Link from "next/link";
 import { useSessionStorage } from "@/app/hooks/useSessionStorage";
 import { clearError } from "@/lib/utils/clear-error";
+import { Heading } from "@/components/ui/heading/Heading";
+import {
+  SkeletonButton,
+  SkeletonInput,
+  SkeletonText,
+} from "@/components/ui/skeleton/skeleton";
 
 type Errors = {
   root?: string;
@@ -70,7 +76,8 @@ export function VerifyEmailContent() {
 
     const result = z
       .object({ email: EmailSchema })
-      .safeParse(emailRef.current?.value);
+      .safeParse({ email: emailRef.current?.value });
+
     if (!result.success) {
       setErrors(z.flattenError(result.error).fieldErrors);
       setIsPending(false);
@@ -80,6 +87,7 @@ export function VerifyEmailContent() {
     try {
       const { error } = await authClient.sendVerificationEmail({
         email: result.data.email,
+        callbackURL: "/email-verified",
       });
 
       if (error) {
@@ -99,22 +107,19 @@ export function VerifyEmailContent() {
 
   return (
     <>
-      {source === "sign-up" ? (
-        <p>
-          Check your inbox for a verification link. It may take a minute to
-          arrive.
+      <div>
+        <Heading tag="h1" size="h1">
+          Verify your email
+        </Heading>
+
+        <p className="mar-block-start-xs">
+          {source === "sign-up"
+            ? "Check your inbox for a verification link. It may take a minute to arrive."
+            : source === "sign-in"
+              ? "Your email address has not been verified yet. Send a new verification link to continue."
+              : "Enter your email address and we’ll send a verification link if one is available."}
         </p>
-      ) : source === "sign-in" ? (
-        <p>
-          Your email address has not been verified yet. Send a new verification
-          link to continue.
-        </p>
-      ) : (
-        <p>
-          Enter your email address and we’ll send a verification link if one is
-          available.
-        </p>
-      )}
+      </div>
       <form
         ref={formRef}
         onSubmit={handleSubmit}
@@ -171,6 +176,23 @@ export function VerifyEmailContent() {
       >
         Back to log in
       </Button>
+    </>
+  );
+}
+
+export function VerifyEmailContentSkeleton() {
+  return (
+    <>
+      <div className="flow-xs">
+        <SkeletonText />
+        <SkeletonText />
+      </div>
+      <div className={styles.form}>
+        <SkeletonText fullWidth={false} />
+        <SkeletonInput />
+        <SkeletonButton fullWidth />
+        <SkeletonButton fullWidth />
+      </div>
     </>
   );
 }
