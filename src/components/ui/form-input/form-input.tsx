@@ -8,28 +8,28 @@ type FormInputProps = {
 } & ComponentPropsWithRef<"input">;
 
 export function FormInput({
-  type,
   name,
   label,
   errorMessage,
   ...rest
 }: FormInputProps) {
   return (
-    <label className={styles.container}>
-      <span className={styles.label}>{label}</span>
-      <input
-        type={type}
-        name={name}
-        className={styles.input}
-        aria-invalid={!!errorMessage}
-        aria-describedby={errorMessage ? `${name}-error` : undefined}
-        {...rest}
-      />
+    <div>
+      <label className={styles.container}>
+        <span className={styles.label}>{label}</span>
+        <input
+          name={name}
+          className={styles.input}
+          aria-invalid={!!errorMessage}
+          aria-describedby={errorMessage ? `${name}-error` : undefined}
+          {...rest}
+        />
+      </label>
       {errorMessage && (
-        <span id={`${name}-error`} className={styles.error} role="status">
+        <div id={`${name}-error`} className={styles.error} role="status">
           {errorMessage}
-        </span>
+        </div>
       )}
-    </label>
+    </div>
   );
 }
