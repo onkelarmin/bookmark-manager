@@ -49,7 +49,7 @@ const PasswordSchema = z
   )
   .max(
     AUTH_INPUT_CONTRAINTS.password.max,
-    `Password must be at least ${AUTH_INPUT_CONTRAINTS.password.max} characters long`,
+    `Password can't be more than ${AUTH_INPUT_CONTRAINTS.password.max} characters long`,
   )
   .regex(
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/,
