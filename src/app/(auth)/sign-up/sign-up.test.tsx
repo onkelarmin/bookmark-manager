@@ -74,7 +74,7 @@ describe("Sign up flow", () => {
     expect(authClient.signUp.email).not.toHaveBeenCalled();
   });
 
-  it("submits valid details", async () => {
+  it("submits valid details and redirects user to the verify-email page", async () => {
     signUpEmailMock.mockResolvedValueOnce({ data: {}, error: null });
 
     const user = userEvent.setup();
@@ -99,7 +99,7 @@ describe("Sign up flow", () => {
     expect(replaceMock).toHaveBeenCalledWith("/verify-email?source=sign-up");
   });
 
-  it("shows the better auth error message when submitting fails", async () => {
+  it("shows the better auth error message and does not redirect the user", async () => {
     const errorMsg = "Something went wrong";
 
     signUpEmailMock.mockResolvedValueOnce({
