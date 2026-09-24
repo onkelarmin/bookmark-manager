@@ -147,4 +147,29 @@ describe("Sign up flow", () => {
     ).toBeInTheDocument();
     expect(replaceMock).not.toHaveBeenCalled();
   });
+
+  it("shows pending state while submitting", async () => {
+    signUpEmailMock.mockReturnValueOnce(new Promise(() => {}));
+
+    const user = userEvent.setup();
+
+    const name = "valid user";
+    const email = "valid@email.com";
+    const password = "ValidPassword123";
+
+    render(<SignUpContent />);
+
+    const submitButton = screen.getByRole("button", {
+      name: /create account/i,
+    });
+
+    await user.type(screen.getByLabelText(/username/i), name);
+    await user.type(screen.getByLabelText(/email/i), email);
+    await user.type(screen.getByLabelText(/password/i), password);
+
+    await user.click(submitButton);
+
+    expect(submitButton).toHaveTextContent("Creating...");
+    expect(submitButton).toBeDisabled();
+  });
 });

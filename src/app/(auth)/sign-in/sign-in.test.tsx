@@ -129,4 +129,27 @@ describe("Sign in flow", () => {
     ).toBeInTheDocument();
     expect(replaceMock).not.toHaveBeenCalled();
   });
+
+  it("shows pending state while submitting", async () => {
+    signInEmailMock.mockReturnValueOnce(new Promise(() => {}));
+
+    const user = userEvent.setup();
+
+    const email = "valid@email.com";
+    const password = "ValidPassword123";
+
+    render(<SignInContent />);
+
+    const submitButton = screen.getByRole("button", {
+      name: /log in/i,
+    });
+
+    await user.type(screen.getByLabelText(/email/i), email);
+    await user.type(screen.getByLabelText(/password/i), password);
+
+    await user.click(submitButton);
+
+    expect(submitButton).toHaveTextContent("Logging in...");
+    expect(submitButton).toBeDisabled();
+  });
 });
