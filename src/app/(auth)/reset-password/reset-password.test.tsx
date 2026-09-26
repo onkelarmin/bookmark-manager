@@ -56,7 +56,7 @@ describe("Reset password flow", () => {
     ).toBeInTheDocument();
   });
 
-  it("shows a validation error for an invalid pasword input", async () => {
+  it("shows a validation error for an invalid password input", async () => {
     const user = userEvent.setup();
 
     searchParams.set("token", "test-token");
