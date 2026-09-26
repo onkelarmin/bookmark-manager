@@ -28,6 +28,8 @@ $color-core-brand: (
   "primary": (
     "800": hsl(178 97% 12%),
     "700": hsl(178 97% 14%),
+    "300": hsl(178 20% 28%),
+    "200": hsl(178 10% 50%),
   ),
 );
 
@@ -57,8 +59,24 @@ $background-colors: (
       light: "neutral-000--light",
       dark: "neutral-800--dark",
     ),
+    elevated: (
+      light: "neutral-000--light",
+      dark: "neutral-600--dark",
+    ),
+    elevated-hover: (
+      light: "neutral-100--light",
+      dark: "neutral-500--dark",
+    ),
+    skeleton: (
+      light: "neutral-100--light",
+      dark: "neutral-500--dark",
+    ),
   ),
   text: (
+    error: (
+      light: "red-600" 0.2,
+      dark: "red-600" 0.2,
+    ),
     selection: (
       light: "primary-700",
       dark: "primary-700",
@@ -81,6 +99,10 @@ $foreground-colors: (
       light: "neutral-900--light",
       dark: "neutral-000--dark",
     ),
+    error: (
+      light: "red-600",
+      dark: "red-600",
+    ),
     selection: (
       light: "neutral-000--light",
       dark: "neutral-000--dark",
@@ -88,6 +110,16 @@ $foreground-colors: (
     target: (
       light: "neutral-000--light",
       dark: "neutral-000--dark",
+    ),
+  ),
+  icon: (
+    spinner-outer: (
+      light: "neutral-000--light",
+      dark: "neutral-000--dark",
+    ),
+    spinner-inner: (
+      light: "primary-700",
+      dark: "primary-700",
     ),
   ),
 );

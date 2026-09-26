@@ -22,8 +22,8 @@ $base-layout: (
 );
 
 $wrapper-padding: (
-  start: bp(24px, 48px, 48px),
-  end: bp(24px, 48px, 48px),
+  start: fluid(16px, 32px, small, medium),
+  end: fluid(16px, 32px, small, medium),
 );
 
 $component-spacing: (
