@@ -1,0 +1,11 @@
+.heading {
+  color: var(--fg-text-strong);
+  text-wrap: balance;
+
+  &[data-size="h1"] {
+    font: var(--font-1-bold);
+  }
+  &[data-size="h2"] {
+    font: var(--font-2-bold);
+  }
+}

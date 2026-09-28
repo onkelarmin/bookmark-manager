@@ -149,6 +149,12 @@
   list-style: none;
 }
 
+// Flex
+.flex {
+  display: flex;
+  align-items: center;
+}
+
 // Padding
 @each $size, $value in $static-sizes {
   .pad-#{$size} {
@@ -326,6 +332,10 @@
 // Fit-content
 .fit-content {
   inline-size: fit-content;
+}
+
+.full-width {
+  inline-size: 100%;
 }
 
 // GSAP auto alpha

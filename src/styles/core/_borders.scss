@@ -15,6 +15,22 @@ $border-colors: (
     light: "transparent",
     dark: "transparent",
   ),
+  container: (
+    light: "transparent",
+    dark: "neutral-500--dark",
+  ),
+  input: (
+    light: "neutral-500--light",
+    dark: "neutral-300--dark",
+  ),
+  input-hover: (
+    light: "neutral-500--light",
+    dark: "neutral-400--dark",
+  ),
+  input-error: (
+    light: "red-800",
+    dark: "red-600",
+  ),
   default-focus: (
     light: "primary-700",
     dark: "neutral-100--dark",
@@ -26,6 +42,26 @@ $borders: (
     width: "none",
     style: "solid",
     color: "none",
+  ),
+  container: (
+    width: "md",
+    style: "solid",
+    color: "container",
+  ),
+  input: (
+    width: "md",
+    style: "solid",
+    color: "input",
+  ),
+  input-hover: (
+    width: "md",
+    style: "solid",
+    color: "input-hover",
+  ),
+  input-error: (
+    width: "md",
+    style: "solid",
+    color: "input-error",
   ),
   default-focus: (
     width: "lg",
