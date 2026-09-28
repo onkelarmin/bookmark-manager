@@ -38,3 +38,5 @@ jobs:
 
       - name: Run Build
         run: npm run build
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
